@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FormGroup, FormControl, Checkbox } from 'react-bootstrap';
+import { FormGroup, FormControl, Checkbox, ControlLabel, HelpBlock } from 'react-bootstrap';
 
 class ButtonComponent extends Component {
 
@@ -10,7 +10,9 @@ class ButtonComponent extends Component {
       capitalLetters: false,
       numbers: false,
       specialCharacters: false,
-      resultCode: ''
+      resultCode: '',
+      length: '32',
+      warning: 'success'
     }
   }
 
@@ -25,10 +27,15 @@ class ButtonComponent extends Component {
       if (this.state.specialCharacters) mask += '~`!@#$%^&*()_+-={}[]:";\'<>?,./|\\';
     }
     let result = '';
-    for (let i = 32; i > 0; --i)
-      result += mask[Math.floor(Math.random() * mask.length)];
+    this.setState({warning: this.getValidationState()})
+    if(this.state.warning == 'success'){
+      for (let i = parseInt(this.state.length, 10); i > 0; --i)
+        result += mask[Math.floor(Math.random() * mask.length)];
+    }else {
+      result = 'Check entered Length please';
+    }
     this.setState({resultCode: result});
-    console.log(this.state.resultCode);
+    //console.log(this.state.resultCode);
   }
 
   toggleChange(number){
@@ -43,30 +50,57 @@ class ButtonComponent extends Component {
     }
   }
 
+  getValidationState() {
+    if(isNaN(this.state.length) || this.state.length == 'Infinity' || this.state.length < 0){
+      return 'warning';
+    }else{
+      return 'success';
+    }
+  }
+
+  handleChange(e) {
+    this.setState({ length: e.target.value });
+    //console.log(this.state.length);
+  }
+
   render(){
     return(
       <div>
         <form>
-        <div className="form-check">
-            <Checkbox className="form-check-input" type="checkbox" onClick={() => this.toggleChange(0)}>
-             <label className="form-check-label">Small Characters a-z</label>
-            </Checkbox>
-        </div>
-        <div className="form-check">
-            <Checkbox className="form-check-input" type="checkbox" onClick={() => this.toggleChange(1)}>
-             <label className="form-check-label">Capital Characters A-Z</label>
-            </Checkbox>
-        </div>
-        <div className="form-check">
-            <Checkbox className="form-check-input" type="checkbox" onClick={() => this.toggleChange(2)}>
-             <label className="form-check-label">Numbers 0-9</label>
-            </Checkbox>
-        </div>
-        <div className="form-check">
-            <Checkbox className="form-check-input" type="checkbox" onClick={() => this.toggleChange(3)}>
-             <label className="form-check-label">Special Characters</label>
-            </Checkbox>
-        </div>
+        <FormGroup
+          controlId="length"
+          validationState={this.getValidationState()}
+        >
+          <ControlLabel>Enter the length of the code that you want to generate</ControlLabel>
+          <FormControl
+            type="text"
+            value={this.state.length}
+            placeholder="Enter text"
+            onChange={e => this.handleChange(e)}
+          />
+          <FormControl.Feedback />
+          </FormGroup>
+          <HelpBlock>Make sure the length is a valid integer.</HelpBlock>
+          <div className="form-check">
+              <Checkbox className="form-check-input" type="checkbox" onClick={() => this.toggleChange(0)}>
+               <label className="form-check-label">Small Characters a-z</label>
+              </Checkbox>
+          </div>
+          <div className="form-check">
+              <Checkbox className="form-check-input" type="checkbox" onClick={() => this.toggleChange(1)}>
+               <label className="form-check-label">Capital Characters A-Z</label>
+              </Checkbox>
+          </div>
+          <div className="form-check">
+              <Checkbox className="form-check-input" type="checkbox" onClick={() => this.toggleChange(2)}>
+               <label className="form-check-label">Numbers 0-9</label>
+              </Checkbox>
+          </div>
+          <div className="form-check">
+              <Checkbox className="form-check-input" type="checkbox" onClick={() => this.toggleChange(3)}>
+               <label className="form-check-label">Special Characters</label>
+              </Checkbox>
+          </div>
         </form>
         <button className="btn btn-outline-primary generateButton" onClick={() => this.generateCode()}>Generate CODE!</button>
         <p className="alert alert-info lead answer">The Generated Code is: {this.state.resultCode}</p>
