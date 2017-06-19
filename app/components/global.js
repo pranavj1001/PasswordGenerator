@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FormGroup, FormControl, Checkbox } from 'react-bootstrap';
 
-class ButtonCompoment extends Component {
+class ButtonComponent extends Component {
 
   constructor(props){
     super(props);
@@ -9,7 +9,8 @@ class ButtonCompoment extends Component {
       smallLetters: false,
       capitalLetters: false,
       numbers: false,
-      specialCharacters: false
+      specialCharacters: false,
+      resultCode: ''
     }
   }
 
@@ -26,18 +27,19 @@ class ButtonCompoment extends Component {
     let result = '';
     for (let i = 32; i > 0; --i)
       result += mask[Math.floor(Math.random() * mask.length)];
-    console.log(result);;
+    this.setState({resultCode: result});
+    console.log(this.state.resultCode);
   }
 
   toggleChange(number){
     if (number == 0){
-      this.state.smallLetters = !this.state.smallLetters;
+      this.setState({smallLetters: !this.state.smallLetters});
     }else if (number == 1) {
-      this.state.capitalLetters = !this.state.capitalLetters;
+      this.setState({capitalLetters: !this.state.capitalLetters});
     }else if (number == 2) {
-      this.state.numbers = !this.state.numbers;
+      this.setState({numbers: !this.state.numbers});
     }else if (number == 3){
-      this.state.specialCharacters = !this.state.specialCharacters;
+      this.setState({specialCharacters: !this.state.specialCharacters});
     }
   }
 
@@ -67,10 +69,11 @@ class ButtonCompoment extends Component {
         </div>
         </form>
         <button className="btn btn-outline-primary generateButton" onClick={() => this.generateCode()}>Generate CODE!</button>
+        <p className="alert alert-info lead answer">The Generated Code is: {this.state.resultCode}</p>
       </div>
     )
   }
 
 }
 
-export default ButtonCompoment;
+export default ButtonComponent;
