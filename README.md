@@ -1,4 +1,4 @@
-# PasswordGenerator
+# SecureCodeGenerator
 A secureCode generator for your unique URL, password needs.
 
 <br>
