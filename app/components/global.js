@@ -73,6 +73,7 @@ class ButtonComponent extends Component {
         >
           <ControlLabel>Enter the length of the code that you want to generate</ControlLabel>
           <FormControl
+            className="length"
             type="text"
             value={this.state.length}
             placeholder="Enter text"
